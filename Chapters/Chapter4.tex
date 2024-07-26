@@ -1,0 +1,165 @@
+\chapter{Data Analysis}
+
+After identifying appropriate entry and exit time frames, we need to establish if there are any significant trades to make, to profit from the window of in-efficient markets.
+
+One important finding to note, is that over 80\% of the earthquakes reported by USGS in the coverage period, were not covered on Twitter by any news agency. The system will also have to have a reasonable stop-loss or time limit to account for these cases.
+
+\begin{figure}[H]
+\centering
+ \caption{Earthquakes Reported by USGS}
+ \label{fig:reported}
+\begin{tikzpicture}
+ \pie [rotate = 0]
+    {18/ Covered by news tweets,
+     82/ Not Covered}
+\end{tikzpicture}
+\end{figure}
+
+\pagebreak
+\section{Data Gathering}
+
+For each of the 470 tweets from USGS, data was compiled for:
+
+\begin{itemize}
+    \item first related news tweet (if any)
+    \item magnitude of earthquake
+    \item location of earthquake
+\end{itemize}
+
+This was joined with data on 629 indices from around the world, from four different asset classes. These indicies have been identified by Bloomberg as being the major global, regional and local indices for their respective asset classes. Table~\ref{tab:assetclasses} shows the breakdown of by asset class. 
+
+\begin {table}[H]
+\caption{Asset Classes Analysed} \label{tab:assetclasses}
+\begin{center}
+    \begin{tabu}{| c c c c | } 
+        \hline
+        \rowfont[c]{\bfseries} Asset Class & Trading & Liquidity & Num Indices  \\
+        \hline\hline
+        Equities & Trading Hours & Medium & 348 \\
+        Rates & Trading Hours & Low & 65 \\ 
+        FX & 24/7 & High & 168\\
+        Commodities & Global Trading & Low & 48 \\
+        \hline
+    \end{tabu}
+\source{Bloomberg L.P.\cite{bloomberg}}
+\end{center}
+\end{table}
+
+For these indices, their approximate location was calculated using the same methods as the tweets. The full list of indices used and the country they represent can be found in the appendices. Equities in Appendix~\ref{sec.B}, Rates in Appendix~\ref{sec.C}, FX in Appendix~\ref{sec.D}, and Commodities in Appendix~\ref{sec.E}.
+
+When joined with the 470 USGS tweets, we were able to calculate:
+
+\begin{itemize}
+    \item Distance from earthquake to the index/exchange
+    \item Price changes from the time of the earthquake to the time of the USGS tweet
+    \item Price changes from the time of the USGS tweet to the time of the first related news tweet
+    \item Price changes every minute after the USGS tweet
+\end{itemize}
+
+\pagebreak
+\section{Data Mining}
+
+Before testing the data, it needed to be cleaned. All records where the index didn't move because the trading market wasn't open were removed so as to not distort the distributions.
+
+Using dataframes and stats libraries in python, the data can easily be cut and manipulated, to look for significant relationships:
+
+\begin{enumerate}
+    \item Do asset classes move in response to an earthquake?
+    \item Do any individual indices move in response to earthquakes?
+\end{enumerate}
+
+Because a small earthquake in one country is not likely to affect the stock market in a country on the other side of the world, due to proximity and size, those two factors were used for further filtering when searching for patterns:
+
+\begin{enumerate}
+    \item Do markets move when a large earthquake occurs?
+    \item Do markets move more when large earthquake occurs versus a small one?
+    \item Are markets in close proximity affected?
+    \item Are markets in close proximity affected more than further markets? Can this be generalised to a certain distance?
+    \item Do markets close to an earthquake move more if a large earthquake occurs?
+\end{enumerate}
+
+These same parameters were also used to check for potential pair trades; long one instrument and short an alternative. For example, long a local index, but short an index in an unrelated market to adjust for coincidental market moves.
+
+\pagebreak
+\section{Hypothesis Testing}
+
+Financial market prices are often considered random with a mean reversion to zero \cite{burton_random_walk}. This is why, for most scenarios, investors are looking for returns either greater than (long position) or less than zero (short position). Which means the hypothesis to test is:
+
+\setcounter{hyp}{-1}
+\begin{hyp} \label{hyp:null}That the average return is equal to zero \end{hyp}
+\begin{hyp} \label{hyp:alt}That the average return is not equal to zero \end{hyp}
+
+This is a two tailed t-test, using one sample. The significance level chosen is 95\%, so:
+\begin{align*}
+    \alpha&= (1 - 95\%)/2  \\
+    &= 0.025
+\end{align*}
+
+Alternatively, prices are sometimes modelled using stochastic differential equations, using the standard deviation of returns, with a drift based on the risk free rate of the asset\cite{Hull_Options}. The hypothesis test for returns equal to zero is still appropriate, as long as the final check includes adjustments for the risk free rate and standard deviation of returns.
+
+For trades entered at the time of the USGS tweet, to the first news tweet, the single sample t-tests run were:
+
+\begin{itemize}
+    \item Asset Class returns on aggregate
+    \item Asset Class returns given various Richter scale filters
+    \item Asset Class returns filtered by indicies close to the epicentre
+    \item Single Index returns on aggregate
+    \item Single Index returns given various Richter scale filters
+    \item Single Index returns filtered by indicies close to the epicentre
+\end{itemize}
+
+With 67\% of the earthquakes in the review window registering less than 6 on the Richter scale, scores above six were grouped for investigation. To complete the search, this threshold was increased in increments of 0.1.
+
+To run the tests filtering by those close to the equator, the checks were done starting with those within 2,000km from the epicenter (about 5\% of the earth's circumference. This was increased in increments of 500km up to 20,000, and the hypothesis tests were run.
+
+Section~\ref{subsec:hyp_test} described some of the assumptions behind the t-test, such as size and distribution. For every test performed, the result was not accepted unless the assumptions held. Expanding on Equation~\ref{eq:minpop}, this function was used:
+
+\begin{lstlisting}[caption={Function to test if assumptions hold}, captionpos=t, label={lst:assumpt}]
+def assumptions_hold(sample_s, skew, kurt, count):
+    # Z score of significance = 1.96
+    # margin of error = 5%
+    min_p = (1.96**2 * sample_s * (1-sample_s))/(0.05**2)
+    #count must be greater than minimum population, skew and kurt must both be close to zero
+    return (count > min_p) and (abs(skew) < 0.5) and (abs(kurt) < 2)
+\end{lstlisting}
+
+Some tests compared two sets of returns against each other. This sort of analysis can be useful for investors looking to make a long/short trade. The average return of each is compared in a two-sample t-test. In this case the hypothesis is:
+
+\setcounter{hyp}{-1}
+\begin{hyp}[Test hypothesis] \label{hyp:null_2}That the average return of the two returns sets is equal \end{hyp}
+\begin{hyp} \label{hyp:alt_2}That the average return of the two returns sets is not equal \end{hyp}
+
+For the distance tests, the data was first separated into those below a threshold, and those within a threshold. Three groups were established, and the boundaries were varied which searching the space for significant trades. The three groups were; very-close, neighbouring, and unrelated. 
+
+The circumference of the earth is 40,075km. This means the furthest great circle distance between two points is around 20,000km. Within the same asset class every index located within a certain close distance, was compared with those located within a range. The loop used to search is shown in Listing~\ref{lst:pair_trades}. It shows how boundaries were established and then searched extensively. A similar loop was run for comparing the very-close group to the unrelated group, where the unrelated group was all indices located further than a certain distance away.
+
+\begin{lstlisting}[caption={Searching for significant pair trades}, captionpos=t, label={lst:pair_trades}]
+from scipy import stats.f, stats.ttest_ind
+alpha = 0.05/2
+#earth's circumference is 40,000 km
+for i in range(1000, 4000, step=200):
+    for j in range(2000,5000, step=200):
+        if j>i:
+            for each asset, grp in grouped_returns:
+                # find close group / near group
+                close_grp = grp[(grp['Distance']<=i)].groupby('Ticker')
+                near_grp = grp[(grp['Distance']<=j)&(grp['Distance']>i)].groupby('Ticker')
+                #find all cross-wise pairs
+                for name_c, close in close_grp:
+                    for name_n, near in near_grp:
+                        #calculate f-stat, t-stat p value, distribution calcs
+                        
+                        #if assumptions valid & p-value < alpha record details
+                    
+\end{lstlisting}
+
+The news tweet is the close signal for the trade, and the USGS tweet is the open signal. As discussed previously, there were many cases where earthquakes were not covered by the media. This would lead to a open trade without a finite close signal. Because of this, an alternate close signal was investigated. Of the earthquakes covered, over 50\% were picked up by news agencies within 40 minutes. So, for each earthquake, prices movements for 40 minutes afterwards were analysed, and searched for significant returns.
+
+
+%When writing the Methods section  must clearly identify the statistical methods  will use to generate the results needed to meet the research objectives and the research scope.
+%²  must also demonstrate that  understand all assumptions associated with the methods  used and justify why those methods are appropriate for r research.
+%² For example,  cannot just state \Bootstrapping methods will be used to generate con¯dence intervals for the population correlation coe±cient."  need to show that r study meets the necessary assumptions to use bootstrapping methods to generate con¯dence intervals for the population correlation coe±cient.
+%² Remember that `methods' are di®erent than `results'. Therefore,  should not be presenting summaries (such as tables and ¯gures of results) in the Methods chapter. 
+%Do cannot assume that r committee members or anyone who will read the dissertation understands the methods  used. Therefore, in the Methods chapter,  should Clearly describe the methods.  should provide enough details so that anyone %reading the dissertation would know how to replicate r research.
+%Justify why the statistical methods are appropriate.
+%Include simple examples that demonstrate an application of methods.

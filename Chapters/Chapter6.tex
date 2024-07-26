@@ -1,0 +1,64 @@
+\chapter{Discussion and Conclusion}
+
+The results of this project has shown two things:
+
+\begin{enumerate}
+    \item It is possible to identify tweets related to a certain event, such as an earthquake
+    \item There are significant market moves on the back of these events
+\end{enumerate}
+
+The topology of the final model in terms of number of nodes in the hidden layers was shown to be the best combination for most of the hyper-parameter combinations tried. Even with different activation functions the two layer model [3, 2] was still the best combination. Also, even with different nodes and set-ups the best learning rate was around 0.01. This can give us confidence that the best model was found.
+
+A review of the rules-of-thumb discussed in section~\ref{subsubsec:topology} compared with the optimal model generated shows that it is consistent. The number of hidden layer neurons is at least 2/3 of the size of the input layer, but less than twice that number. Also, the size of each hidden layer is between the layer's input size and the layer's output size. Whilst this doesn't guarantee the model is optimal, it is strong corroborative evidence.
+
+The model weights output show that the inputs for distance and time are more important in deducing whether a tweet is related or not to the earthquake. This was expected.
+
+The two different thresholding approaches yielded very different results, but because the first method had a higher AUC, the standard threshold cutoff of 85\% is recommended.
+
+The existence of significant moves in financial markets after an earthquake, even for trades where the sharpe ratio was less than one, suggest these signals are being generated correctly. Further study on instruments outside the major indices for each asset class can be conducted, specifically derivative instruments and structured products based on these underlyings that could potentially boost returns per unit risk.
+
+\pagebreak
+Despite the success of meeting the objectives stated in chapter 1, there are many areas that can be improved on.
+
+One of the constraints was time spent in manually classifying the news tweets. With further resources, the training set could be expanded and potentially take tweets in other languages.
+
+One of the drawbacks in the analysis was that so many of the earthquakes reported, were not actually covered by the fifteen news agencies selected. Running in real-time, with the same trained model, the Twitter handles covered could include all news agencies, and potentially more sources as well. The use of Polyglot libraries for NER will allow the system to use 40 major languages. This would all increase the likelihood of getting a close signal to the trade. Additionally, the Polyglot library could potentially be used to extract earthquake related entities, instead of the list of earthquake related words. This would reduce the number of steps involved, especially for multiple languages, and possibly speed up the analysis.
+
+It is possible that more data will be available within the tweets as Twitter is working on increasing the character limit from 140 to 280. The 140 character limit was an arbitrary threshold because twitter started as an SMS-based service. More characters means that the news agencies could write more details in their announcements and provide more information to the NLP system. Given how news agencies currently uses twitter just for quick headlines for their \#breaking news, this is not expected to have a large effect on the predictive power of the network, but is worth monitoring.
+
+This success is confirmation of the success other teams have had in using twitter feeds for sentiment analysis. As NLP libraries and NER analysis improves, these short form tweets will become more significant for generating trade signals. This will possibly lead to the risk that as more investors use this data as a signal, the markets will move even faster to an efficient price, and opportunities for profits are reduced.
+
+From all the significant trades generated, the ones investors are mostly likely to act on are when there is an earthquake near Japan. Two equity indices increased consistently after the USGS system reported an earthquake. The high incidence of earthquakes in the region means that there was more samples to chose from which increased the chance of having a significant number of data points. Whilst the equity markets are only open a portion of each day, if an earthquake occurs outside market hours, it is less likely to cause as much damage as people will be inside at home, not on the streets.
+
+The other index to move significantly after earthquakes in the region was frozen concentrated orange juice. Because of the potential for spoilage if there are delays in the supply chain for this product, it is logical for investors to price in any potential collapse in logistics.
+
+For the trades generated and analysed by the system, there are some very promising results. The movements of commodities initially, and then after the USGS tweet are logical from a fundamentals point of view. As discussed in Chapter 2, this asset class trades in most markets and time-zones, so it has more availability for trades at times when other markets might be closed. However, this result requires more research as it could have another signal, other than the USGS tweet and is possibly a case of spurious correlation.
+
+Fundamentally, it is likely that commodity markets are affected by earthquakes close to their local region. Particularly bulk commodities like agricultural and base metals, there is a high cost of storage and transportation. Earthquakes can disrupt the supply chain, increasing costs by increasing the chance of spoilage, or the logistics expenses.
+
+The results of filtering by equity indices close to the source of the earthquake was expected. Equities are typically affected by local market movements as well as sentiment which as been confirmed by this analysis.
+
+The lack of effect from earthquakes registering high on the Richter scale is something that requires further study. This could be because the precise location is more important than how severe the earthquake's impact is.
+
+For the pair trades based on distance, it's possible that there wasn't a single significant trade found because of the time-zones many of the instruments are dependant on. For example, an earthquake in India will have short term affects locally, but the US market is closed at that time, so there will be less effect there from the earthquake.
+
+When the minute data right after the USGS tweet was examined, there were a number of significant trades in the commodities universe. This suggested that some commodities have a reasonable lag in adjusting to new information, and investors can use this to make profitable trades. However, this needs to be read in conjunction with the movements from the time the earthquake hit to the time of the USGS tweet. The data showed that it's likely there will be a period of over-reaction and correction, that traders can profit from.
+
+There were no trades generated for the rates class. This is not unusual given that this class is much less volatile than the others, and is less likely to make a significant move on the back of an earthquake. The only exception might be an extremely large one located near a major population area. The lack of trades generated for the FX asset class was not expected. Given the liquidity of this asset class, it is most likely that new information is priced in faster. This could mean that the FX market is much more efficient than other asset classes, pricing in new information faster.
+
+The most important caveat is that entering and exiting positions in short team trades like this are highly dependant on market liquidity. As previously mentioned this paper isn't looking into the market micro structure for this analysis. Given the analysis is on major indices, liquidity will usually not be a problem.
+
+As mentioned in Chapter 4, this paper looked at traditional hypothesis testing methods for establishing significant returns. If objective benchmarks can be established, and implementation bias reduced, tests suggested by Keogh and Kasetty\cite{data_mining_Keogh} are potentially available. There is also the possibility of employing unsupervised machine learning techniques such as k-means clustering to attempt to establish a relationship between the data sets when the issues with machine learning in financial markets highlighted by Zhang and Zhou\cite{golden_nuggets} are overcome.
+
+The profitable trades suggested for tickers in the commodities and equities asset classes after an earthquake suggest that there is alpha available to technologically sophisticated investors. Further work can be done to test the market liquidity after an earthquake, to confirm that slippage and other trading costs do not negate the potential profits.
+
+
+%The Discussion is much more than a restatement of the research results. Your goal is to help your committee understand what all of the results mean (\see the big picture").
+%You have the opportunity to review your work as a whole.
+%² You need to relate the contents of the Results chapter to the Literature Review chapter. That is, you want to compare and contrast your results to the contents of the important references that you cited.
+%² You want to show to your committee that you can interpret your research results (and not just summarize the results). That is, you want to convince your committee that your results are truly analyzed (and not only described).
+%² You should also indicate any limitations of your research (such as reviewing the research scope) that researchers need to address in the future.
+%² In the Discussion, it must be clear if a statement you make is a direct result of your research results (within the scope) or if you are generalizing beyond the research scope.
+
+%In writing the conclusions you should restate your principal findings, the importance of your findings in the academic field and explain how your research question/s have been answered by the methods you employed and the evidence you have found. To a certain extent this will replicate the introduction; in that it is a summary. Neither introduction nor the conclusion can outline anything in detail: both act as guides to the content within the rest of the dissertation.
+

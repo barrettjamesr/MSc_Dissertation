@@ -1,0 +1,217 @@
+%% ----------------------------------------------------------------
+%% Thesis.tex -- MAIN FILE (the one that you compile with LaTeX)
+%% ---------------------------------------------------------------- 
+
+% Set up the document
+\documentclass[a4paper, 11pt, oneside]{Thesis}  % Use the "Thesis" style, based on the ECS Thesis style by Steve Gunn
+\graphicspath{Figures/}  % Location of the graphics files (set up for graphics to be in PDF format)
+
+% Include any extra LaTeX packages required
+\usepackage{tabu}
+\usepackage{tikz} 
+\usepackage{pgfplots}
+\usepackage{pgf-pie}
+\usepackage{longtable}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{thmtools}
+\declaretheoremstyle[
+spaceabove=6pt, spacebelow=6pt,
+headfont=\normalfont\bfseries,
+notefont=\mdseries, notebraces={(}{)},
+bodyfont=\normalfont,
+postheadspace=0.6em,
+headpunct=:
+]{mystyle}
+\declaretheorem[style=mystyle, name=Hypothesis, preheadhook={\renewcommand{\thehyp}{H\textsubscript{\arabic{hyp}}}}]{hyp}
+
+\usepackage{xfrac}
+\usepackage{rotating}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{lscape}
+\newcommand{\source}[1]{\caption*{Source: {#1}} }
+\usepackage[square, numbers, comma, sort&compress]{natbib}  % Use the "Natbib" style for the references in the Bibliography
+\usepackage{verbatim}  % Needed for the "comment" environment to make LaTeX comments
+\usepackage{vector}  % Allows "\bvec{}" and "\buvec{}" for "blackboard" style bold vectors in maths
+\hypersetup{urlcolor=blue, colorlinks=true}  % Colours hyperlinks in blue, but this can be distracting if there are many links.
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+    language=Python,
+    aboveskip=3mm,
+    belowskip=3mm,
+    showstringspaces=false,
+    columns=flexible,
+    basicstyle={\small\ttfamily},
+    numbers=none,
+    numberstyle=\tiny\color{gray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{dkgreen},
+    stringstyle=\color{mauve},
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=3
+}
+\pgfplotsset{width=10cm, compat=1.9, scaled y ticks=false, scaled x ticks=false}
+
+\righthyphenmin
+\lefthyphenmin
+
+%% ----------------------------------------------------------------
+
+\begin{document}
+\frontmatter      % Begin Roman style (i, ii, iii, iv...) page numbering
+
+% Set up the Title Page
+\title  {Sequential Associations}
+\authors  {\texorpdfstring
+            {\href{https://github.com/barrettjamesr}{James R. Barrett, CFA}}
+            {James R. Barrett, CFA}
+            }
+\addresses  {\groupname\\\deptname\\\univname} 
+\date       {\today}
+\subject    {Market Reactions to large-scale global events}
+\keywords   {Twitter, Earthquakes, Neural Network}
+
+\maketitle
+%% ----------------------------------------------------------------
+
+\setstretch{1.3}  % It is better to have smaller font and larger line spacing than the other way round
+
+% Define the page headers using the FancyHdr package and set up for one-sided printing
+\fancyhead{}  % Clears all page headers and footers
+\rhead{\thepage}  % Sets the right side header to show the page number
+%\lhead{}  % Clears the left side page header
+
+\pagestyle{fancy}  % Finally, use the "fancy" page style to implement the FancyHdr headers
+
+%% ----------------------------------------------------------------
+% The "Funny Quote Page"
+\pagestyle{empty}  % No headers or footers for the following pages
+
+\null\vfill
+% Now comes the "Funny Quote", written in italics
+\textit{``Twitter is not a technology. It's a conversation. And it's happening with or without you.''}
+
+\begin{flushright}
+- @charleneli
+\end{flushright}
+
+\vfill\vfill\vfill\vfill\vfill\vfill\null
+\clearpage  % Funny Quote page ended, start a new page
+%% ----------------------------------------------------------------
+% The Abstract Page
+\addtotoc{Abstract}  % Add the "Abstract" page entry to the Contents
+\abstract{
+\addtocontents{toc}{\vspace{1em}}  % Add a gap in the Contents, for aesthetics
+
+This research shows how news feeds on Twitter can be used to generate trading signals. The signals are generated after an earthquake, and use the US geological survey's official Twitter feed for entry points. The work utilises named entity recognition libraries and other natural language processing methods to read tweets from news agencies for an appropriate close signal. Asset classes and securities to trade are calculated based on which markets move significantly after an earthquake in the time frames indicated. A neural network was trained to identify the tweets related to the tweet from the USGS and traditional hypothesis tests were used for the event study methodology.
+
+}
+
+\clearpage  % Abstract ended, start a new page
+%% ----------------------------------------------------------------
+
+\setstretch{1.3}  % Reset the line-spacing to 1.3 for body text (if it has changed)
+
+% The Acknowledgements page, for thanking everyone
+\acknowledgements{
+\addtocontents{toc}{\vspace{1em}}  % Add a gap in the Contents, for aesthetics
+
+This work would not have been possible without the support of my team leader at Bloomberg, Ben Clarke, who has allowed me to use the company data sets in my research. This enabled me to complete the work, without having to suffer monetary costs.
+
+I would like to thank the faculty in the computer science department at HKU, who have taught me and challenged me to learn during the course of my studies. Especially Dr Dirk Schnieders who taught me the topics of artificial intelligence and machine learning.
+
+Also from the faculty I would like to thank my dissertation second examiner, Dr. S.M. Yiu, for his alternate views and driving questions. Lastly, I would like to thank my supervisor, Dr. Beta C.L. Yip for his guidance and patience over the course of my project. His knowledge and support has been invaluable to my learning.
+
+}
+\clearpage  % End of the Acknowledgements
+%% ----------------------------------------------------------------
+
+\pagestyle{fancy}  %The page style headers have been "empty" all this time, now use the "fancy" headers as defined before to bring them back
+
+
+%% ----------------------------------------------------------------
+\lhead{\emph{Contents}}  % Set the left side page header to "Contents"
+\tableofcontents  % Write out the Table of Contents
+
+%% ----------------------------------------------------------------
+\lhead{\emph{List of Figures}}  % Set the left side page header to "List if Figures"
+\listoffigures  % Write out the List of Figures
+
+%% ----------------------------------------------------------------
+\lhead{\emph{List of Tables}}  % Set the left side page header to "List of Tables"
+\listoftables  % Write out the List of Tables
+
+%% ----------------------------------------------------------------
+% End of the pre-able, contents and lists of things
+% Begin the Dedication page
+
+\setstretch{1.3}  % Return the line spacing back to 1.3
+
+\pagestyle{empty}  % Page style needs to be empty for this page
+\dedicatory{Dedicated to my wife Yumi. \\She is my muse.}
+
+\addtocontents{toc}{\vspace{2em}}  % Add a gap in the Contents, for aesthetics
+
+%% ----------------------------------------------------------------
+\mainmatter	  % Begin normal, numeric (1,2,3...) page numbering
+\pagestyle{fancy}  % Return the page headers back to the "fancy" style
+\renewcommand{\chaptermark}[1]{\markright{\;\; #1}{}}
+\lhead[\fancyplain{}{}]{\fancyplain{}{\bfseries\rightmark}}
+\setlength{\headheight}{21pt} 
+
+% Include the chapters of the thesis, as separate files
+% Just uncomment the lines as you write the chapters
+
+\input{Chapters/Chapter1} % Introduction
+
+\input{Chapters/Chapter2} % Background Theory 
+
+\input{Chapters/Chapter3} % Twitter filtering and classification
+
+\input{Chapters/Chapter4} % Data Analysis
+
+\input{Chapters/Chapter5} % Results and Discussion
+
+\input{Chapters/Chapter6} % Conclusion
+
+
+%% ----------------------------------------------------------------
+% Now begin the Appendices, including them as separate files
+
+\addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics
+
+\appendix % Cue to tell LaTeX that the following 'chapters' are Appendices
+
+%\input{Appendices/AppendixA}	% USGS Tweets
+
+\input{Appendices/AppendixB} % Equity Indices
+
+\input{Appendices/AppendixC} % Rates Indices
+
+\input{Appendices/AppendixD} % FX Indices
+
+\input{Appendices/AppendixE} % Commodity Indices
+
+\addtocontents{toc}{\vspace{2em}}  % Add a gap in the Contents, for aesthetics
+\backmatter
+
+%% ----------------------------------------------------------------
+\emergencystretch=1em
+%\usepackage[T1]{fontenc}
+%\usepackage[final]{microtype}
+
+\label{Bibliography}
+\lhead{\emph{Bibliography}}  % Change the left side page header to "Bibliography"
+\bibliographystyle{unsrtnat}  % Use the "unsrtnat" BibTeX style for formatting the Bibliography
+\bibliography{Bibliography} 
+
+\end{document}  % The End
+%% ----------------------------------------------------------------

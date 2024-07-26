@@ -1,0 +1,36 @@
+\chapter{Introduction}
+
+Financial markets react to global events and news\cite{efficient_markets}. When new information is released there is a short delay before prices fully incorporate new information. In the modern technological era, finance professionals are looking for new sources of information to get an edge on their competitors in the market. Social media is one such emerging news source. In the past decade, it has become a crowd-sourced database of real-time updates. Accurately identifying when one of these events has occurred has downstream applications such as event time-line generation, event summation and can be compared with other time series data like financial market prices.
+
+Twitter has been around since 2006. On average in 2017 there were over 350,000 tweets per minute\cite{social_stats}. Because of the short form of tweets, and the speed of dissemination throughout the network through re-tweets, Twitter as a platform is often considered to be a news media itself\cite{Twitter_social}. If Twitter can be used as an aggregator of news sources, to quickly identify when a major world event has occurred, it can be used to give a trading signal.
+
+The purpose of this research is two-fold:
+\begin{enumerate}
+\item Identify if Twitter can be analysed for a trading signal
+\item Find any potential excess returns opportunity
+\end{enumerate}
+
+There are three main categories of news that affect the financial markets; government or policy news, company specific news and unexpected shocks\cite{mindell_market}. Government news includes changes to interest rates, economic policy and economic indicator releases. Examples of company specific news are results announcements, operational updates and corporate actions. Because the timing of release for these two categories is typically known ahead of time, the market will have priced in expectations. Also, any deviation from base case expectations will have likely been considered, so prices will move to the efficient value faster. This means these two are likely to have less of an impact on markets as per efficient market theory\cite{efficient_markets}. Unexpected shocks such as terrorist attacks and natural disasters, are expected to have a larger impact on financial market prices\cite{market_shock}. Natural disasters such as typhoons or bush-fires build up over time, and are less likely to make a market impact. Because of the availability of accurate data, and the sudden onset of earthquakes, that is the focus of this paper.
+
+All earthquakes globally are covered by the US Geological Survey and can be accessed through their API, or through their Twitter account which posts a standardised format to a separate account, @USGSted.  This makes identifying the time and location of an earthquake from the USGS account a trivial exercise. After this, major earthquakes are widely covered by news agencies, and their Twitter accounts will post headlines with links to these stories notifying followers.
+
+Interpreting the unstructured text of these headlines is possible through Named Entity Recognition (NER) libraries. Based on the details extracted from these tweets, it is a trivial task for humans to classify whether a tweet from a news agency is related to a particular earthquake identified by USGS. However, given the sheer volume of tweets published, it is impossible for a human to do the task efficiently in real time. A machine needs to be trained to read the tweets, and classify them.
+
+The announcement from USGS is accepted as the fastest realistic way to get information about an earthquake globally\cite{earthquake_flow}. This is because these government organisations have the resources to devote to the global sensor equipment required. We can use this notification as the trade entry signal. The indication that the information is now fully public, and absorbed into the market prices under semi-strong efficient market hypothesis\cite{efficient_markets} is when news agencies have reported it. This can be used as the trade close signal.
+
+The different asset classes will react to shocks in different ways. This report examines the reactions of various asset classes and their different segments in the minutes after an earthquake reported by USGS. It also breaks the asset classes down into indices located close to the epicenter of the earthquake, as these are expected to be more affected by shocks than assets in unaffected countries. In analysing the market reactions, the liquidity and trading hours of the instruments also need to be considered.
+
+Chapter 2 contains a review of the current best practises for the experiments and analysis performed in the report. This includes building an artificial neural network for the classification of tweets, as well as event study methodology and the statistical significance tests used. Chapter 3 describes the construction of the neural network, the data pre-processing and the training tests run. Chapter 4 explains the details of the asset class segments, and the hypotheses tested to attempt to identify profitable trades. The results of all the tests are summarised in Chapter 5 and the implications are discussed in Chapter 6.
+
+
+
+%%Intro:
+%%explain to your committee the research problem in statistics that  are going to investigate. 
+%It should include the Research Objectives and the Research Scope.
+%² The introduction describes the process  used to investigate the research problem and emphasizes the originality and relevance of your work.
+%²  should avoid presenting any conclusions that  have made during the research process.  will save conclusions for the Discussion chapter.
+%² The end of the Introduction usually ends with a `map' that brie°y outlines what will be contained in the other chapters or sections of the dissertation. For %example:
+
+%² After writing the other chapters,  should review the Introduction again. Carefully read the Introduction and ask Does the Introduction provide motivation %regarding the relevance and originality of the research found in the Discussion chapter?
+
+
